@@ -73,3 +73,40 @@ def test_monte_carlo_is_reproducible_across_runs():
     a = _run("app_pages/monte_carlo.py")
     b = _run("app_pages/monte_carlo.py")
     assert a.metric[0].value == b.metric[0].value
+
+
+def test_comparison_page_renders():
+    """對照頁沒有 metric，所以不能放進上面的 PAGES 參數化測試，單獨測。"""
+    at = _run("app_pages/claude_vs_cowork.py")
+    assert not at.exception
+    assert at.dataframe, "對照頁應該要有對照表"
+
+
+def test_sidebar_only_appears_on_pages_that_use_params():
+    """財務參數側邊欄只該出現在吃參數的頁面。
+
+    對照頁純粹是文字內容，側邊欄出現在那裡會讓人以為調了會有影響。
+
+    用 widget 數量判斷而不是看 sidebar 物件在不在 —— Streamlit 的 sidebar
+    永遠有一個根容器，要裡面真的有東西瀏覽器才會把它畫出來。
+    """
+    finance = _run("app_pages/monte_carlo.py")
+    assert len(finance.sidebar.number_input) + len(finance.sidebar.slider) == 10
+
+    compare = _run("app_pages/claude_vs_cowork.py")
+    assert not compare.exception
+    assert len(compare.sidebar.number_input) + len(compare.sidebar.slider) == 0
+
+
+def test_params_survive_a_detour_through_the_comparison_page():
+    """繞去對照頁再回來，先前調好的參數不能被清掉。
+
+    對照頁不呼叫 render_sidebar()，所以要確認那一趟不會把 session state 弄丟。
+    """
+    at = _run()
+    at.sidebar.number_input(key="p_current_age").set_value(45).run()
+    at.switch_page("app_pages/claude_vs_cowork.py").run()
+    assert not at.exception
+    at.switch_page("app_pages/withdrawal.py").run()
+    assert not at.exception
+    assert at.session_state["params"].current_age == 45

@@ -50,9 +50,22 @@ PRESETS: dict[str, dict[str, float | int]] = {
 
 
 def init_state() -> None:
-    """把預設值寫進 session state。由進入點呼叫一次即可。"""
+    """每次 rerun 由進入點呼叫一次，確保 session state 是對的。
+
+    做兩件事：補上還沒有的預設值，以及把既有的值重新指派給自己。
+
+    第二件事看起來像廢話，但不能拿掉：Streamlit 會清掉「這一輪沒有被畫出來」的
+    widget 狀態。對照頁不畫側邊欄，少了這一步，使用者調好的參數會在切過去的
+    瞬間被回收，切回來就只剩 DEFAULTS —— 調了半天的數字無聲無息地歸零。
+    重新指派一次就能讓它們活過那一輪。
+
+    重新指派必須發生在 widget 被建立之前，所以這個函式只能在進入點最前面呼叫。
+    """
     for key, value in DEFAULTS.items():
-        st.session_state.setdefault(key, value)
+        if key in st.session_state:
+            st.session_state[key] = st.session_state[key]
+        else:
+            st.session_state[key] = value
 
 
 def _apply_preset() -> None:

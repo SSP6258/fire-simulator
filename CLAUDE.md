@@ -58,6 +58,15 @@ export PATH="$PATH:/c/Program Files/GitHub CLI"
 **頁面檔案是直接執行的腳本，不要包成 `def app():`。**
 這是 `st.navigation` 的規範寫法。標題由 `streamlit_app.py` 用 `st.title(page.title, icon=page.icon)` 統一處理，頁面內不要再呼叫 `st.title`。
 
+**側邊欄只畫在需要參數的頁面，而 `init_state()` 必須重新指派既有的值。**
+`streamlit_app.py` 用頁面物件比對（`page in PAGES_NEEDING_PARAMS`）決定要不要畫側邊欄，
+不要改成用標題字串比對 —— 改個標題就會安靜地失效。
+
+搭配的坑：**Streamlit 會回收「這一輪沒有被畫出來」的 widget 狀態。**
+所以 `init_state()` 裡那段 `st.session_state[key] = st.session_state[key]` 不能拿掉，
+否則使用者切到對照頁再切回來，調好的參數會無聲無息地全部歸零。
+`test_params_survive_a_detour_through_the_comparison_page` 就是在守這條。
+
 **參數只有一個來源。**
 `core/params.py` 的 `DEFAULTS` 定義所有 session state 鍵值，`init_state()` 只在進入點呼叫一次。頁面讀 `st.session_state.params`（一個 `FireParams` frozen dataclass），不要自己去讀個別的 `p_*` 鍵。
 
@@ -81,7 +90,7 @@ python ~/.claude/skills/developing-with-streamlit/scripts/discover.py --project-
 
 ```bash
 pip install -r requirements-dev.txt   # pytest 在這份，不在 requirements.txt
-pytest                                # 39 個測試，約 4 秒
+pytest                                # 42 個測試，約 3 秒
 ```
 
 - `tests/test_simulate.py` — 純計算的單元測試
