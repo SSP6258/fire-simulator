@@ -1,0 +1,6 @@
+# 開發／測試用的額外相依。
+# 刻意不放進 requirements.txt —— Streamlit Cloud 只該裝執行 App 需要的東西，
+# 裝測試工具只會拖慢部署。
+-r requirements.txt
+
+pytest==9.1.1

@@ -31,6 +31,10 @@ PYTHONIOENCODING=utf-8 ./.venv/Scripts/streamlit.exe docs st.metric
 export PATH="$PATH:/c/Program Files/GitHub CLI"
 ```
 
+**3. Windows 260 字元路徑上限。**
+不要在很深的目錄底下建 venv。Streamlit 套件內含層次很深的 skill 資產，
+在深路徑安裝會噴 `OSError: [WinError 3]`，訊息看起來完全不像路徑問題。
+
 ## 架構規則
 
 **`core/simulate.py`、`core/charts.py`、`core/fmt.py` 絕對不能 import streamlit。**
@@ -64,7 +68,8 @@ python ~/.claude/skills/developing-with-streamlit/scripts/discover.py --project-
 ## 測試
 
 ```bash
-pytest        # 34 個測試，約 2 秒
+pip install -r requirements-dev.txt   # pytest 在這份，不在 requirements.txt
+pytest                                # 34 個測試，約 2 秒
 ```
 
 - `tests/test_simulate.py` — 純計算的單元測試

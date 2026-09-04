@@ -28,6 +28,7 @@ streamlit run streamlit_app.py
 ## 跑測試
 
 ```bash
+pip install -r requirements-dev.txt
 pytest
 ```
 
@@ -58,7 +59,16 @@ tests/               單元測試 + AppTest
 **2. 頁面放 `app_pages/` 而不是 `pages/`。**
 `pages/` 是 Streamlit 舊版自動多頁面機制的保留字，跟 `st.navigation` 併用會出現重複的導覽列。
 
-## 關於 requirements.txt
+## 關於相依檔案
+
+| 檔案 | 用途 |
+|---|---|
+| `requirements.txt` | 執行 App 需要的套件。Streamlit Cloud 只讀這份 |
+| `requirements-dev.txt` | 上面那份 + `pytest`。只有開發時才需要 |
+
+測試工具不該進 `requirements.txt` —— 部署環境裝它沒有意義，只會拖慢 build。
+
+### 為什麼版本要釘死
 
 版本號是在 Python 3.13.15 上**實際安裝、實際跑過測試**之後才釘下來的。
 
