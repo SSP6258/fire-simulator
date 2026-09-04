@@ -18,3 +18,6 @@ venv/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# 跨對話的工作交接筆記 —— 本機工作狀態，不是專案文件
+HANDOFF.md
