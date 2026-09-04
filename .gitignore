@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# 虛擬環境 —— 絕對不要進版控。
+# 它有好幾百 MB，而且綁死在這台機器的路徑上，換一台電腦根本不能用。
+# 別人要重建環境只需要 requirements.txt。
+.venv/
+venv/
+
+# Streamlit 的機密設定，永遠不要進版控
+.streamlit/secrets.toml
+
+# 編輯器 / 作業系統
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

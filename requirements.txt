@@ -1,0 +1,13 @@
+# 這些版本號是在 Python 3.13.15 上「實際安裝並跑過測試」之後才釘下來的，
+# 不是憑印象寫的。釘版本是為了讓 Streamlit Cloud 裝到跟本機一樣的環境。
+#
+# 注意：不要盲目照抄舊專案的 requirements.txt。釘在幾年前的版本
+#（例如 numpy==1.21.0）在新的 Python 上沒有預編譯 wheel，
+# pip 會退回原始碼編譯然後失敗 —— 部署會直接掛掉。
+streamlit==1.63.0
+numpy==2.5.2
+pandas==3.0.5
+
+# altair 是 streamlit 的相依套件，本專案直接 import 它來畫圖，
+# 所以明確列出來（不要依賴別的套件順手幫你裝）。
+altair==6.2.2
