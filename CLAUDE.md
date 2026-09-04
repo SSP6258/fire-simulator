@@ -81,11 +81,12 @@ python ~/.claude/skills/developing-with-streamlit/scripts/discover.py --project-
 
 ```bash
 pip install -r requirements-dev.txt   # pytest 在這份，不在 requirements.txt
-pytest                                # 34 個測試，約 2 秒
+pytest                                # 39 個測試，約 4 秒
 ```
 
 - `tests/test_simulate.py` — 純計算的單元測試
 - `tests/test_app.py` — 用 `streamlit.testing.v1.AppTest` 在記憶體裡跑整個 App，不需要瀏覽器
+- `tests/test_claude_tools.py` — 對照頁的資料完整性（欄位一致、來源是 https）
 
 **改任何計算邏輯後，一定要跑 `pytest`。** 特別注意這兩條保護性測試：
 

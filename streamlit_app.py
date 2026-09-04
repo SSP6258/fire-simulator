@@ -40,6 +40,11 @@ page = st.navigation(
             title="退休提領分析",
             icon=":material/beach_access:",
         ),
+        st.Page(
+            "app_pages/claude_vs_cowork.py",
+            title="Claude Code vs Cowork",
+            icon=":material/compare_arrows:",
+        ),
     ],
     position="top",
 )
